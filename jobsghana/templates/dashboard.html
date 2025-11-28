@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Welcome, {{ session.get('user_name') }}!</h2>
+
+    {% if session['role'] == 'Job Giver' %}
+        <h4 class="mt-4">Post a New Job</h4>
+        <form action="{{ url_for('post_job') }}" method="post" class="mb-5">
+            <div class="mb-3">
+                <input type="text" name="title" class="form-control" placeholder="Job Title" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" name="company" class="form-control" placeholder="Company" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" name="location" class="form-control" placeholder="Location" required>
+            </div>
+            <div class="mb-3">
+                <textarea name="description" class="form-control" placeholder="Job Description" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Post Job</button>
+        </form>
+
+        <h4>Your Posted Jobs</h4>
+        {% if jobs %}
+            <ul class="list-group">
+                {% for job in jobs %}
+                    <li class="list-group-item">
+                        <strong>{{ job.title }}</strong> at {{ job.company }} - {{ job.location }}
+                        <p>{{ job.description }}</p>
+                        <small>Posted on: {{ job.date_posted.strftime('%d-%m-%Y') }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven’t posted any jobs yet.</p>
+        {% endif %}
+
+    {% else %}
+        <h4 class="mt-4">Available Jobs</h4>
+        {% if jobs %}
+            <ul class="list-group">
+                {% for job in jobs %}
+                    <li class="list-group-item">
+                        <strong>{{ job.title }}</strong> at {{ job.company }} - {{ job.location }}
+                        <p>{{ job.description }}</p>
+                        <small>Posted on: {{ job.date_posted.strftime('%d-%m-%Y') }}</small>
+                        <form action="#" method="post" class="mt-2">
+                            <button class="btn btn-success btn-sm">Apply</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No jobs available currently.</p>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
